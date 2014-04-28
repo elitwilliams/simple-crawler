@@ -14,6 +14,7 @@ while len(urls) > 0:
         htmltext = urllib.urlopen(urls[0]).read()
     except:
         print urls[0]
+
     soup = BeautifulSoup(htmltext)
     
     urls.pop(0)
@@ -23,6 +24,7 @@ while len(urls) > 0:
         tag['href'] = urlparse.urljoin(url,tag['href'])
         if url in tag['href'] and tag['href'] not in visited:
             urls.append(tag['href'])
+
 visited.append(tag['href'])
 
 print visited
