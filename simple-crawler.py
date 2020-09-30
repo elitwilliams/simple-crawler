@@ -1,30 +1,45 @@
-import urlparse
 import urllib
+import urllib.parse as urlparse
+
 from bs4 import BeautifulSoup
 
-url = "http://www.nyglass.com"
 
-urls = [url] # Stack of urls to scrape
-visited = [url] # Record of urls crawled
+def simple_crawler(url: str) -> None:
+    """
+    Crawls URL input to find on-page links, creates list of those, then visits and scrapes those urls for links.
+    """
 
-# Crawl and build list of urls on a page
+    urls = [url]  # List of urls to scrape
+    visited = [url]  # Record of urls crawled
 
-while len(urls) > 0:
-    try:
-        htmltext = urllib.urlopen(urls[0]).read()
-    except:
-        print urls[0]
+    # Crawl and build list of urls on a page
 
-    soup = BeautifulSoup(htmltext)
-    
-    urls.pop(0)
-    print len(urls)
+    while len(urls) > 0:
+        try:
+            htmltext = urllib.urlopen(urls[0]).read()
+        except:
+            print(urls[0])
 
-    for tag in soup.findAll('a',href = True):
-        tag['href'] = urlparse.urljoin(url,tag['href'])
-        if url in tag['href'] and tag['href'] not in visited:
-            urls.append(tag['href'])
+        soup = BeautifulSoup(htmltext)
 
-visited.append(tag['href'])
+        urls.pop(0)
+        print(len(urls))
 
-print visited
+        for tag in soup.findAll("a", href=True):
+            tag["href"] = urlparse.urljoin(url, tag["href"])
+            if url in tag["href"] and tag["href"] not in visited:
+                urls.append(tag["href"])
+
+    visited.append(tag["href"])
+
+    print(visited)
+
+    return None
+
+
+def main():
+    simple_crawler(url="http://www.foundryoutdoors.com")
+
+
+if __name__ == "__main__":
+    main()
